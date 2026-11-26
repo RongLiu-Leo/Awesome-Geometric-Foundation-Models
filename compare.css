@@ -1,0 +1,243 @@
+.comparison {
+  --compare-ink: #18221f;
+  --compare-muted: #52605b;
+  --compare-line: #d7dcd7;
+  --compare-blue: #254fd4;
+  padding-top: clamp(2rem, 5vw, 4.7rem);
+  padding-bottom: clamp(2.4rem, 6vw, 5.5rem);
+  color: var(--compare-ink);
+}
+.comparison-intro { margin-bottom: clamp(1.6rem, 4vw, 3rem); }
+.comparison-intro h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw, 4.35rem);
+  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: -.055em;
+}
+.comparison-intro p {
+  max-width: 40rem;
+  margin: 1rem 0 0;
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  line-height: 1.5;
+  color: var(--compare-muted);
+}
+.comparison-matrix {
+  overflow: hidden;
+  border: 1px solid var(--compare-line);
+  border-radius: 4px;
+  background: white;
+}
+.comparison-matrix table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: .98rem;
+  line-height: 1.55;
+}
+.comparison-label-col { width: 20%; }
+.comparison-matrix th, .comparison-matrix td {
+  vertical-align: top;
+  padding: 1.1rem clamp(1rem, 2vw, 1.65rem);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.comparison-matrix th + th, .comparison-matrix td { border-left: 1px solid var(--compare-line); }
+.comparison-matrix thead th { padding-top: 1.4rem; padding-bottom: 1.4rem; }
+.comparison-matrix tbody th, .comparison-matrix tbody td { border-top: 1px solid var(--compare-line); }
+.comparison-matrix tbody th { font-size: .9rem; font-weight: 600; }
+.comparison-matrix tbody td { font-weight: 400; }
+.comparison-matrix tbody th, .comparison-axis { background: #f8f9f6; }
+.comparison-axis .comparison-meta { margin-top: .05rem; }
+.comparison-meta {
+  display: block;
+  font-family: "IBM Plex Mono", Consolas, monospace;
+  font-size: .69rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: .095em;
+  color: var(--compare-muted);
+}
+.comparison-select-wrap { position: relative; margin: .45rem 0 .55rem; }
+.comparison-select-wrap select {
+  display: block;
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  padding: .5em 2rem .5em .65em;
+  border: 1px solid #9aa69f;
+  border-radius: 3px;
+  background: white;
+  color: var(--compare-ink);
+  font: inherit;
+  font-size: clamp(1rem, 1.65vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -.025em;
+  cursor: pointer;
+}
+.comparison-select-wrap select:hover { border-color: var(--compare-blue); }
+.comparison-select-wrap span {
+  position: absolute;
+  top: calc(50% - .29rem);
+  right: .85rem;
+  width: .47rem;
+  height: .47rem;
+  transform: rotate(45deg);
+  border-right: 1.5px solid var(--compare-ink);
+  border-bottom: 1.5px solid var(--compare-ink);
+  pointer-events: none;
+}
+.comparison-source {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .15rem .65rem;
+  font-weight: 400;
+  font-size: .82rem;
+  color: var(--compare-muted);
+}
+.comparison a { color: var(--compare-blue); text-decoration: none; }
+.comparison a:hover { text-decoration: underline; }
+.comparison a:focus-visible, .comparison select:focus-visible {
+  outline: 2px solid var(--compare-blue);
+  outline-offset: 2px;
+}
+.comparison-modes {
+  display: inline-flex;
+  margin: 0 0 1rem;
+  border: 1px solid var(--compare-line);
+  border-radius: 4px;
+  background: white;
+}
+.comparison .comparison-modes a {
+  padding: .55rem .95rem;
+  color: var(--compare-muted);
+  font-size: .88rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+.comparison .comparison-modes a[aria-current] {
+  background: var(--compare-ink);
+  color: white;
+}
+.comparison-modes a:first-child { border-radius: 3px 0 0 3px; }
+.comparison-modes a:last-child { border-radius: 0 3px 3px 0; }
+.comparison-overview {
+  border: 1px solid var(--compare-line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: white;
+}
+.comparison-overview table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  text-align: left;
+}
+.comparison-overview th, .comparison-overview td {
+  padding: 1rem clamp(.65rem, 1.5vw, 1.2rem);
+  vertical-align: top;
+  overflow-wrap: anywhere;
+  font-size: .9rem;
+  line-height: 1.4;
+}
+.comparison-overview thead { background: #f0f3ef; }
+.comparison-overview thead th, .overview-cell-label {
+  color: var(--compare-muted);
+  font: 500 .68rem/1.45 "IBM Plex Mono", Consolas, monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.comparison-overview thead th { padding-top: .7rem; padding-bottom: .7rem; }
+.comparison-overview th:first-child { width: 17%; }
+.comparison-overview tbody tr { border-top: 1px solid var(--compare-line); }
+.comparison-overview tbody tr:hover { background: #f8f9f6; }
+.comparison-overview tbody th a { font-weight: 600; }
+.overview-cell-label { display: none; }
+.comparison-readings { margin-top: clamp(2rem, 5.3vw, 4.8rem); }
+.comparison-readings h2 {
+  margin: 0 0 1.2rem;
+  font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -.04em;
+}
+.comparison-reading-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--compare-line);
+  border-bottom: 1px solid var(--compare-line);
+}
+.comparison-reading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.35rem clamp(.9rem, 2vw, 1.6rem);
+}
+.comparison-reading:first-child { padding-left: 0; }
+.comparison-reading + .comparison-reading { border-left: 1px solid var(--compare-line); }
+.comparison-reading h3 {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.3;
+  letter-spacing: -.02em;
+  font-weight: 600;
+}
+.comparison-reading p {
+  margin: .65rem 0 1rem;
+  font-size: .91rem;
+  color: var(--compare-muted);
+  line-height: 1.55;
+}
+.comparison-reading a { margin-top: auto; font-size: .86rem; font-weight: 600; }
+
+@media (max-width: 690px) {
+  .comparison-overview { border: 0; border-radius: 0; background: transparent; overflow: visible; }
+  .comparison-overview table, .comparison-overview tbody { display: block; }
+  .comparison-overview thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%);
+  }
+  .comparison-overview tbody { display: grid; gap: .75rem; }
+  .comparison-overview tbody tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border: 1px solid var(--compare-line);
+    border-radius: 4px;
+    overflow: hidden;
+    background: white;
+  }
+  .comparison-overview tbody th:first-child {
+    grid-column: 1 / -1; width: auto; background: #f0f3ef; font-size: 1rem; padding: .7rem .85rem;
+  }
+  .comparison-overview tbody td { padding: .7rem .85rem; border-top: 1px solid var(--compare-line); }
+  .comparison-overview tbody td:nth-child(odd) { border-left: 1px solid var(--compare-line); }
+  .overview-cell-label { display: block; margin-bottom: .25rem; }
+  .comparison-matrix table, .comparison-matrix thead, .comparison-matrix tbody { display: block; }
+  .comparison-matrix colgroup, .comparison-matrix .comparison-axis { display: none; }
+  .comparison-matrix tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .comparison-matrix tbody th { grid-column: 1 / -1; border-bottom: 1px solid var(--compare-line); }
+  .comparison-matrix tbody td { border-top: 0; }
+  .comparison-matrix tbody td:nth-child(2), .comparison-matrix .comparison-model:nth-child(2) { border-left: 0; }
+  .comparison-matrix th, .comparison-matrix td { padding: .9rem .75rem; }
+  .comparison-matrix thead th { padding: .95rem .65rem; }
+  .comparison-matrix tbody th { padding: .43rem .75rem; font-size: .82rem; }
+  .comparison-matrix td { font-size: .9rem; line-height: 1.45; }
+  .comparison-select-wrap select {
+    min-height: 2.75rem;
+    padding-right: 1.45rem;
+    padding-left: .38rem;
+    font-size: clamp(.9rem, 3.4vw, 1.12rem);
+  }
+  .comparison-select-wrap span { right: .55rem; }
+  .comparison-source { display: grid; justify-content: start; font-size: .77rem; }
+  .comparison-reading-grid { grid-template-columns: 1fr; }
+  .comparison-reading { padding: 1.15rem 0; }
+  .comparison-reading + .comparison-reading { border-left: 0; border-top: 1px solid var(--compare-line); }
+}
+
+@media (max-width: 350px) {
+  .comparison-matrix thead th { padding: .7rem .4rem; }
+  .comparison-select-wrap select { font-size: .82rem; }
+}
