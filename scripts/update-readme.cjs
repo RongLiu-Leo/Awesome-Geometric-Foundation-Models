@@ -1,4 +1,4 @@
-// Regenerate only the paper list. Run with --check to verify it without writing.
+// Refresh the paper lists in the README and the homepage. Use --check to verify both.
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -33,6 +33,10 @@ for (const model of models) {
 
 const site = "https://rongliu-leo.github.io/Awesome-Geometric-Foundation-Models/";
 const lines = [];
+const paperItems = [];
+const escapeHtml = text => text.replace(/[&<>"']/g, char => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+})[char]);
 let lastYear;
 for (const model of models.sort((a, b) => a.preprint.localeCompare(b.preprint) || a.id.localeCompare(b.id))) {
   const year = model.preprint.slice(0, 4);
@@ -44,16 +48,23 @@ for (const model of models.sort((a, b) => a.preprint.localeCompare(b.preprint) |
     .filter(([, url]) => url).map(([label, url]) => `[${label}](<${url}>)`);
   const name = model.name.replace(/[\\\[\]]/g, "\\$&");
   lines.push(`- [**${name}**](${site}#model/${model.id}) · ${links.join(" · ")} — ${model.summary}`);
+  paperItems.push(`<li><a href="${escapeHtml(model.paper)}"><strong>${escapeHtml(model.name)}</strong></a> (${year}) — ${escapeHtml(model.summary)}</li>`);
 }
 
-const readme = path.join(root, "README.md");
-const current = fs.readFileSync(readme, "utf8").replace(/\r\n/g, "\n");
-const section = /<!-- catalog:start -->[\s\S]*?<!-- catalog:end -->/;
-assert(section.test(current), "README is missing the catalog markers");
-const updated = current.replace(section, () => ["<!-- catalog:start -->", ...lines, "", "<!-- catalog:end -->"].join("\n"));
-if (process.argv.includes("--check")) {
-  assert(updated === current, "Refresh the README with node scripts/update-readme.cjs");
-} else if (updated !== current) {
-  fs.writeFileSync(readme, updated);
+const outputs = [["README.md", [...lines, ""]], ["index.html", paperItems]];
+const section = /^([ \t]*)<!-- catalog:start -->\n[\s\S]*?^\1<!-- catalog:end -->/m;
+const changes = [];
+for (const [filename, entries] of outputs) {
+  const destination = path.join(root, filename);
+  const current = fs.readFileSync(destination, "utf8").replace(/\r\n/g, "\n");
+  assert(section.test(current), `${filename} is missing its catalog markers`);
+  const updated = current.replace(section, (match, indent) =>
+    ["<!-- catalog:start -->", ...entries, "<!-- catalog:end -->"]
+      .map(line => line && indent + line).join("\n"));
+  if (updated !== current) changes.push({filename, destination, updated});
 }
-console.log(`Verified ${models.length} model profiles and their README entries.`);
+for (const {filename, destination, updated} of changes) {
+  assert(!process.argv.includes("--check"), `Refresh ${filename} with node scripts/update-readme.cjs`);
+  fs.writeFileSync(destination, updated);
+}
+console.log(`Verified ${models.length} model profiles in the README and homepage.`);

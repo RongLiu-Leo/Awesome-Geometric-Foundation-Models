@@ -133,7 +133,10 @@
     else {main.innerHTML=overview();bindOverview();document.querySelector("#index-title").tabIndex=-1;}
     const pageTitles={overview:"Geometric foundation models",roadmap:"Research roadmap",sources:"Source library",compare:"Compare models"};
     const label = model ? model.name : pageTitles[current];
-    document.title = current === "overview" ? projectTitle : `${label} · ${projectTitle}`;
+    const updateTitle = () => { document.title = current === "overview" ? projectTitle : `${label} · ${projectTitle}`; };
+    // The shared pageview beacon reads the guide title once per document load.
+    if (document.readyState === "complete") updateTitle();
+    else window.addEventListener("load", updateTitle, {once:true});
     document.querySelectorAll("[data-nav]").forEach(link=>{
       if(link.dataset.nav===(current==="model"?"overview":current))link.setAttribute("aria-current","page");else link.removeAttribute("aria-current");
     });

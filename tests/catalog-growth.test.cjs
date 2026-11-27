@@ -95,6 +95,7 @@ test('new catalog entries appear throughout the website', t => {
   fs.writeFileSync(fixtureFile, `(${addFixtures})();\nwindow.addEventListener("load", ${checkPages});`);
   const index = fs.readFileSync(path.join(site, 'index.html'), 'utf8');
   for (const [, asset] of index.matchAll(/<(?:script|link)\b[^>]*?\b(?:src|href)="([^"]+)"/g)) {
+    if (/^(?:https?:)?\/\//.test(asset)) continue;
     const destination = path.join(temp, asset);
     fs.mkdirSync(path.dirname(destination), { recursive: true });
     fs.copyFileSync(path.join(site, asset), destination);

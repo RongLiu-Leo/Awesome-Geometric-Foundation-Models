@@ -5,7 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f9f6">
   <meta name="description" content="A curated guide to geometric foundation models for 3D and 4D vision, with papers, architecture diagrams, and walkthroughs of the original code.">
-  <title>Awesome-Geometric-Foundation-Models</title>
+  <meta name="author" content="Rong Liu">
+  <meta name="keywords" content="geometric foundation models, 3D reconstruction, multi-view geometry, pointmaps, depth estimation, 4D tracking">
+  <title>Awesome Geometric Foundation Models</title>
+  <link rel="canonical" href="https://rongliu-leo.github.io/Awesome-Geometric-Foundation-Models/">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "url": "https://rongliu-leo.github.io/Awesome-Geometric-Foundation-Models/",
+    "name": "Awesome Geometric Foundation Models",
+    "description": "A curated guide to geometric foundation models for 3D and 4D vision, with papers, architecture diagrams, and walkthroughs of the original code.",
+    "inLanguage": "en",
+    "author": {
+      "@type": "Person",
+      "@id": "https://rongliu-leo.github.io/#rong-liu",
+      "name": "Rong Liu",
+      "url": "https://rongliu-leo.github.io/"
+    }
+  }
+  </script>
+  <script>
+    if (location.origin === "https://rongliu-leo.github.io") {
+      const beacon = document.createElement("script");
+      beacon.src = "https://rongliu-leo.github.io/assets/js/beacon.js";
+      document.head.appendChild(beacon);
+    }
+  </script>
   <link rel="icon" href="mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="compare.css">
@@ -34,7 +60,28 @@
       </nav>
     </div>
   </header>
-  <main id="main-content" tabindex="-1"><noscript>Enable JavaScript for the interactive guide, or <a href="https://github.com/RongLiu-Leo/Awesome-Geometric-Foundation-Models#papers">browse the paper list on GitHub</a>.</noscript></main>
+  <main id="main-content" tabindex="-1">
+    <section class="container reading source-page">
+      <h1>Geometric foundation models for 3D and 4D vision</h1>
+      <p class="intro">Explore how models recover depth, cameras, pointmaps, and motion from images and video. The papers below are ordered by their first public release.</p>
+      <h2 id="papers">Papers</h2>
+      <ul>
+        <!-- catalog:start -->
+        <li><a href="https://arxiv.org/abs/2312.14132"><strong>DUSt3R</strong></a> (2023) — Two image grids become two dense pointmaps expressed in the first camera’s coordinate frame.</li>
+        <li><a href="https://arxiv.org/abs/2406.09756"><strong>MASt3R</strong></a> (2024) — A descriptor head adds explicit pixel matching to DUSt3R’s two-view pointmap architecture.</li>
+        <li><a href="https://arxiv.org/abs/2503.11651"><strong>VGGT</strong></a> (2025) — Alternating frame and global attention supplies one scene representation to several prediction heads.</li>
+        <li><a href="https://arxiv.org/abs/2507.13347"><strong>π³</strong></a> (2025) — Every view takes the same path through the network, removing the need to pick an anchor.</li>
+        <li><a href="https://arxiv.org/abs/2509.13414"><strong>MapAnything</strong></a> (2025) — Optional depth, poses and calibration help one network reconstruct scenes at an estimated metric scale.</li>
+        <li><a href="https://arxiv.org/abs/2511.10647"><strong>Depth Anything 3</strong></a> (2025) — One vision transformer estimates depth and cameras across views, trained with supervision on both depth and rays.</li>
+        <li><a href="https://arxiv.org/abs/2605.15195"><strong>VGGT-Ω</strong></a> (2026) — Selected layers pass compact register and camera tokens between views to reduce training memory.</li>
+        <li><a href="https://arxiv.org/abs/2605.30215"><strong>Déjà View</strong></a> (2026) — One transformer block revisits the same views, with an adjustable budget for refining geometry.</li>
+        <li><a href="https://arxiv.org/abs/2611.23144"><strong>π⁴</strong></a> (2026) — Two looped decoders reconstruct visible surfaces and track moving points through the recovered 3D scene.</li>
+        <!-- catalog:end -->
+      </ul>
+      <p><a href="https://github.com/RongLiu-Leo/Awesome-Geometric-Foundation-Models#papers">Browse papers and code on GitHub</a></p>
+      <noscript><p>Enable JavaScript to explore the architecture diagrams, comparisons, and source walkthroughs.</p></noscript>
+    </section>
+  </main>
   <footer class="footer"><div class="container"><a href="#overview">Awesome-Geometric-Foundation-Models</a><a href="#sources">Source library <span aria-hidden="true">↗</span></a></div></footer>
 </body>
 </html>
