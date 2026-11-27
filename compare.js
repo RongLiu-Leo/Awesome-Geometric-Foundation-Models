@@ -47,24 +47,24 @@
   function modeSwitch(allModels) {
     return `<nav class="comparison-modes" aria-label="Comparison view">
       <a href="${lastPair}"${allModels ? "" : ' aria-current="page"'}>Side by side</a>
-      <a href="#compare/all"${allModels ? ' aria-current="page"' : ""}>All nine</a>
+      <a href="#compare/all"${allModels ? ' aria-current="page"' : ""}>All models</a>
     </nav>`;
   }
 
   function overview(models) {
     const headings = overviewLabels.map(label => `<th scope="col" role="columnheader">${label}</th>`).join("");
     const rows = models.map(model => {
-      const values = overviewFacts[model.id] || [model.exchange, model.output, model.scale, model.motion];
-      const cells = values.map((value, i) => `<td role="cell"><span class="overview-cell-label" aria-hidden="true">${overviewLabels[i]}</span>${escapeText(value)}</td>`).join("");
+      const values = Object.hasOwn(overviewFacts, model.id) ? overviewFacts[model.id] : [model.exchange, model.output, model.scale, model.motion];
+      const cells = values.map((value, i) => `<td role="cell"><span class="overview-cell-label" aria-hidden="true">${overviewLabels[i]}</span>${escapeText(value || "Not documented")}</td>`).join("");
       return `<tr role="row"><th scope="row" role="rowheader"><a href="#model/${encodeURIComponent(model.id)}">${escapeText(model.name)} <span aria-hidden="true">→</span></a></th>${cells}</tr>`;
     }).join("");
     return `<section class="container comparison" aria-labelledby="comparison-title">
       <header class="comparison-intro"><h1 id="comparison-title">Compare models</h1>
-        <p>See how the nine models combine views, represent geometry and recover motion. Select a model for its architecture and original code.</p>
+        <p>See how models combine views, represent geometry and recover motion. Select a model to explore its architecture.</p>
       </header>
       ${modeSwitch(true)}
       <div class="comparison-overview">
-        <table role="table" aria-label="Nine geometric foundation models">
+        <table role="table" aria-label="Geometric foundation models">
           <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Model</th>${headings}</tr></thead>
           <tbody role="rowgroup">${rows}</tbody>
         </table>
@@ -92,21 +92,21 @@
         <select id="compare-${side}" data-compare-side="${side}">${options}</select>
         <span aria-hidden="true"></span>
       </div>
-      <div class="comparison-source"><span>${escapeText(model.family)}</span>
+      <div class="comparison-source"><span>${escapeText(model.family || model.group)}</span>
         <a href="${escapeText(model.paper)}" aria-label="${escapeText(model.name)} paper">Paper <span aria-hidden="true">↗</span></a>
       </div>
     </th>`;
   }
 
   function render(models, leftId, rightId) {
-    if (models.length < 2) return '<section class="container comparison"><h1>Compare models</h1><p>Comparison requires two model profiles.</p></section>';
     if (leftId === "all") return overview(models);
+    if (models.length < 2) return '<section class="container comparison"><h1>Compare models</h1><p>Comparison requires two model profiles.</p><a href="#compare/all">View all models</a></section>';
     const { left, right } = choosePair(models, leftId, rightId);
     lastPair = route(left.id, right.id);
-    const rows = fields.map(([field, label]) => `<tr role="row">
+    const rows = fields.filter(([field]) => left[field] || right[field]).map(([field, label]) => `<tr role="row">
       <th scope="row" role="rowheader">${label}</th>
-      <td role="cell">${escapeText(left[field])}</td>
-      <td role="cell">${escapeText(right[field])}</td>
+      <td role="cell">${escapeText(left[field] || "Not documented")}</td>
+      <td role="cell">${escapeText(right[field] || "Not documented")}</td>
     </tr>`).join("");
     const focusLinks = focusedPairs.filter(pair => pair.ids.every(id => models.some(model => model.id === id))).map(pair => {
       const names = pair.ids.map(id => models.find(model => model.id === id).name);
@@ -132,10 +132,10 @@
           <tbody role="rowgroup">${rows}</tbody>
         </table>
       </div>
-      <section class="comparison-readings" aria-labelledby="comparison-reading-title">
-        <h2 id="comparison-reading-title">Three differences to look for</h2>
+      ${focusLinks ? `<section class="comparison-readings" aria-labelledby="comparison-reading-title">
+        <h2 id="comparison-reading-title">Differences to look for</h2>
         <div class="comparison-reading-grid">${focusLinks}</div>
-      </section>
+      </section>` : ""}
     </section>`;
   }
 

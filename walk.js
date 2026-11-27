@@ -94,14 +94,16 @@
       <div class="walk-stages">${visible}${paging}</div>`;
   }
 
+  const has = id => Object.hasOwn(window.AtlasWalkData.models, id);
   function render(model,key) {
+    if (!has(model.id)) return "";
     const walk=window.AtlasWalkData.models[model.id];
     return `<section class="content-section walk" id="original-code" aria-labelledby="walk-heading">
       <div class="section-line"><h2 id="walk-heading" tabindex="-1">Inside the original code</h2>
       <a class="out walk-revision" href="https://github.com/${walk.repo}/tree/${walk.commit}" target="_blank" rel="noopener noreferrer">${esc(walk.repo)} <code>${esc(walk.commit.slice(0,8))}</code> ↗</a></div>
-      <nav class="walk-path" aria-label="Trace tensors to source code">${paths[model.id].map(([label,tensor,step])=>
+      ${Object.hasOwn(paths,model.id) ? `<nav class="walk-path" aria-label="Trace tensors to source code">${paths[model.id].map(([label,tensor,step])=>
         `<a href="${linkTo(model.id,step)}"><span>${esc(label)}</span><strong>${esc(tensor)}</strong></a>`
-      ).join("")}</nav>
+      ).join("")}</nav>` : ""}
       <details class="walk-io"><summary>Input and output tensors <span>Shapes, coordinate frames and scale</span></summary>
         <div class="walk-contract">${tensorList("Inputs",walk.inputs)}${tensorList("Outputs",walk.outputs)}</div>
         <p class="walk-shape-key">B is the batch size and H × W is the image grid. The view axis is S, V, T or N depending on the model. In VGGT’s track output, N counts query points.</p>
@@ -115,5 +117,5 @@
     host.innerHTML=panel(window.AtlasWalkData.models[model.id],key);
   }
 
-  window.AtlasWalk = {render,select};
+  window.AtlasWalk = {has,render,select};
 })();

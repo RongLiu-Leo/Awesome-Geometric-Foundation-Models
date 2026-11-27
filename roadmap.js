@@ -1,9 +1,9 @@
 (function roadmapPage() {
   "use strict";
   const chapters = [
-    { years: "2023–2024", title: "Start with an image pair", text: "Two images were enough to predict a dense surface. The next question was whether the model could also identify exactly which pixels corresponded.", until: "2024" },
-    { years: "2025", title: "Bring the whole scene into one pass", text: "Four papers explored different choices for a set of views. Which image anchors the scene? Can known measurements help? Should the network predict XYZ directly or recover it from rays and depth?", until: "2025" },
-    { years: "2026", title: "Spend compute selectively and follow motion", text: "Two concurrent May papers tackled the cost of cross-view reasoning in different ways. In November, π⁴ used repeated computation to reconstruct geometry and track moving points.", until: "2026" }
+    { years: ["2023", "2024"], title: "Start with an image pair", text: "Two images were enough to predict a dense surface. The next question was whether the model could also identify exactly which pixels corresponded." },
+    { years: ["2025"], title: "Bring the whole scene into one pass", text: "These papers explored different choices for a set of views. Which image anchors the scene? Can known measurements help? Should the network predict XYZ directly or recover it from rays and depth?" },
+    { years: ["2026"], title: "Spend compute selectively and follow motion", text: "Two concurrent May papers tackled the cost of cross-view reasoning in different ways. In November, π⁴ used repeated computation to reconstruct geometry and track moving points." }
   ];
   const milestones = {
     dust3r: {
@@ -53,36 +53,47 @@
 
   function render(models, {dateLabel, out, icon, esc}) {
     function entry(m) {
-      const note = milestones[m.id];
-      const earlier = models.find(model => model.id === note.pair);
+      const note = Object.hasOwn(milestones, m.id) ? milestones[m.id] : null;
+      const earlier = note?.pair && models.find(model => model.id === note.pair);
+      const arxiv = /^https:\/\/arxiv\.org\/abs\/\d{4}\.\d{4,5}(?:v\d+)?$/.test(m.paper);
+      const paper = arxiv ? m.paper.replace(/v\d+$/, "") + "v1" : m.paper;
+      const hasWalk = Object.hasOwn(window.AtlasWalkData.models, m.id);
       return `<article class="milestone" id="milestone-${m.id}" tabindex="-1" aria-labelledby="milestone-${m.id}-title">
         <div class="milestone-date"><time datetime="${m.preprint}">${dateLabel(m)}</time></div>
         <div class="milestone-copy"><h3 id="milestone-${m.id}-title"><a href="#model/${m.id}">${esc(m.name)}</a></h3>
-          <h4>${esc(note.title)}</h4><p>${esc(note.text)}</p>
-          <div class="milestone-links"><a href="#model/${m.id}">Architecture ${icon("arrow")}</a>
-            <a href="#model/${m.id}/code">Trace the code ${icon("arrow")}</a>
-            ${out(m.paper+"v1","arXiv v1")}
-            ${note.evidence && note.evidence !== m.paper+"v1" ? out(note.evidence, "Method") : ""}
+          ${note ? `<h4>${esc(note.title)}</h4>` : ""}<p>${esc(note?.text || m.summary)}</p>
+          <div class="milestone-links"><a href="#model/${m.id}">${m.stages?.length ? "Architecture" : "Model profile"} ${icon("arrow")}</a>
+            ${hasWalk ? `<a href="#model/${m.id}/code">Trace the code ${icon("arrow")}</a>` : ""}
+            ${out(paper, arxiv ? "arXiv v1" : "Paper")}
+            ${note?.evidence && note.evidence !== paper ? out(note.evidence, "Method") : ""}
             ${earlier ? `<a href="#compare/${earlier.id}/${m.id}">Compare with ${esc(earlier.name)} ${icon("arrow")}</a>` : ""}
           </div></div>
       </article>`;
     }
-    let priorYear = "";
-    const sections = chapters.map(chapter => {
-      const selection = models.filter(m => m.preprint.slice(0,4)>priorYear && m.preprint.slice(0,4)<=chapter.until);
-      priorYear = chapter.until;
-      return `<section class="road-chapter" aria-labelledby="chapter-${chapter.until}"><header>
-        <div class="eyebrow muted"><span class="short-rule"></span>${chapter.years}</div>
-        <h2 id="chapter-${chapter.until}">${esc(chapter.title)}</h2><p>${esc(chapter.text)}</p></header>
-        <div class="milestones">${selection.map(entry).join("")}</div></section>`;
+    const periods = new Map();
+    for (const model of models) {
+      const year = model.preprint.slice(0, 4);
+      const chapter = chapters.find(item => item.years.includes(year));
+      const key = chapter?.years.at(-1) || year;
+      if (!periods.has(key)) periods.set(key, {chapter, entries: []});
+      periods.get(key).entries.push(model);
+    }
+    const sections = Array.from(periods, ([year, {chapter, entries}]) => {
+      return `<section class="road-chapter" aria-labelledby="chapter-${year}"><header>
+        ${chapter ? `<div class="eyebrow muted"><span class="short-rule"></span>${chapter.years.join("–")}</div>` : ""}
+        <h2 id="chapter-${year}">${esc(chapter?.title || `Papers from ${year}`)}</h2>${chapter ? `<p>${esc(chapter.text)}</p>` : ""}</header>
+        <div class="milestones">${entries.map(entry).join("")}</div></section>`;
     }).join("");
+    const firstYear = models[0]?.preprint.slice(0, 4);
+    const lastYear = models.at(-1)?.preprint.slice(0, 4);
+    const yearRange = firstYear === lastYear ? firstYear : `${firstYear}–${lastYear}`;
     return `<div class="container roadmap"><header class="road-intro">
-      <div class="eyebrow"><span class="short-rule"></span>Research roadmap <span class="slash">/</span> 2023–2026</div>
+      <div class="eyebrow"><span class="short-rule"></span>Research roadmap ${yearRange ? `<span class="slash">/</span> ${yearRange}` : ""}</div>
       <h1>From image pairs to 4D motion<span class="blue-dot">.</span></h1>
-      <p>Follow nine papers from placing pixels in 3D to following a moving point through time. Along the way, the methods branch on how to combine views, recover scale and spend compute.</p>
-      </header><section class="road-overview" aria-labelledby="road-dates"><h2 id="road-dates">First arXiv submissions</h2>
+      <p>Follow the papers from placing pixels in 3D to following a moving point through time. Along the way, the methods branch on how to combine views, recover scale and spend compute.</p>
+      </header><section class="road-overview" aria-labelledby="road-dates"><h2 id="road-dates">First public paper dates</h2>
       <p>Select a paper to jump to its contribution.</p>${window.AtlasRoadmapChart.render(models)}</section>${sections}
-      <div class="ending-links"><a class="button primary" href="#compare/all">${icon("compare")} Compare all nine</a><a class="text-link" href="#roadmap">Back to timeline ${icon("arrow")}</a></div></div>`;
+      <div class="ending-links"><a class="button primary" href="#compare/all">${icon("compare")} Compare all models</a><a class="text-link" href="#roadmap">Back to timeline ${icon("arrow")}</a></div></div>`;
   }
   window.AtlasRoadmap = {render};
 })();

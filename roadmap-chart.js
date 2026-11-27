@@ -19,7 +19,7 @@
       color: #1d2c29;
     }
     .atlas-chronology ol { list-style: none; margin: 0; padding: 0 }
-    .atlas-chronology .chron-years { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)) }
+    .atlas-chronology .chron-years { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); row-gap: 17px }
     .atlas-chronology .chron-year { min-width: 0; position: relative; padding: 0 16px 0 0 }
     .atlas-chronology .chron-year:last-child { padding-right: 0 }
     .atlas-chronology .chron-year::before {
@@ -36,18 +36,22 @@
     }
     .atlas-chronology .chron-year:last-child .chron-heading::before { background: var(--chron-blue) }
     .atlas-chronology .chron-entry {
-      display: grid; grid-template-columns: 44px 1fr; gap: 5px; align-items: baseline;
+      display: grid; grid-template-columns: 44px minmax(0,1fr); gap: 5px; align-items: baseline;
       width: fit-content; max-width: 100%; padding: 5px 1px; text-decoration: none;
       font: 600 14px/1.25 var(--sans,Arial,sans-serif); color: #263b6e;
     }
     .atlas-chronology .chron-entry time {
       color: #53675f; font: 11px/1.25 var(--mono,Consolas,monospace); white-space: nowrap;
     }
+    .atlas-chronology .chron-entry span { overflow-wrap: anywhere }
     .atlas-chronology .chron-entry:hover span { text-decoration: underline; text-underline-offset: 3px }
     .atlas-chronology .chron-entry:focus-visible { outline: 2px solid var(--chron-blue); outline-offset: 3px }
+    @media (min-width: 821px) {
+      .atlas-chronology .chron-year:nth-child(4n)::before { width: calc(100% - 5px) }
+    }
     @media (min-width: 561px) and (max-width: 820px) {
-      .atlas-chronology .chron-years { grid-template-columns: repeat(2,minmax(0,1fr)); row-gap: 17px }
-      .atlas-chronology .chron-year:nth-child(2)::before { width: calc(100% - 5px) }
+      .atlas-chronology .chron-years { grid-template-columns: repeat(2,minmax(0,1fr)) }
+      .atlas-chronology .chron-year:nth-child(2n)::before { width: calc(100% - 5px) }
     }
     @media (max-width: 560px) {
       .atlas-chronology { padding: 18px }
@@ -76,7 +80,7 @@
       }).join("");
       return `<li class="chron-year"><span class="chron-heading">${escape(year)}</span><ol aria-label="Papers from ${escape(year)}">${links}</ol></li>`;
     }).join("");
-    return `${styles}<nav class="atlas-chronology" aria-label="Jump to a milestone by first arXiv submission date"><ol class="chron-years">${sections}</ol></nav>`;
+    return `${styles}<nav class="atlas-chronology" aria-label="Jump to a milestone by first public paper date"><ol class="chron-years">${sections}</ol></nav>`;
   }
 
   window.AtlasRoadmapChart = { render };

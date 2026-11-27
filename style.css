@@ -116,6 +116,7 @@ h1,h2,h3 {font-weight:600}
 .detail-header {display:grid;align-items:center;grid-template-columns:1.3fr .85fr;gap:5%;padding:8px 0 34px;border-bottom:1px solid var(--line)}
 .detail-header h1,.source-page h1 {font-size:clamp(45px,5vw,73px);line-height:1.05;letter-spacing:-.065em;margin:14px 0}
 .detail-header p {max-width:680px}
+.detail-header > :only-child {grid-column:1 / -1}
 .detail-links {margin-top:16px;gap:18px}
 .detail-links .out,.section-line .out {font-size:13px}
 .out .icon {width:14px;height:14px}

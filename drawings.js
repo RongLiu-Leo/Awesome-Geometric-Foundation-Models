@@ -246,6 +246,7 @@
   const flowStyle = `<style>
     .atlas-flow{margin:0;container-type:inline-size;min-width:0}
     .atlas-flow .af-topology{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.35rem;padding:1.1rem 0;align-items:center}
+    .atlas-flow .af-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
     .atlas-flow .af-group{min-width:0;position:relative;text-align:center}
     .atlas-flow .af-group+.af-group:before{position:absolute;content:'→';left:-1.35rem;top:50%;width:1.35rem;color:#687c70;line-height:1}
     .atlas-flow .af-label{display:block;font:600 .66rem/1.4 ui-monospace,Consolas,monospace;letter-spacing:.025em;color:#4a6053;margin:0 0 .4rem}
@@ -268,8 +269,12 @@
   </style>`;
 
   function flow(model) {
-    if (!model || !Object.hasOwn(diagrams, model.id)) return '';
-    const diagram = diagrams[model.id];
+    if (!model) return '';
+    const hasDiagram = Object.hasOwn(diagrams, model.id);
+    const diagram = hasDiagram ? diagrams[model.id] : {
+      title: model.name,
+      groups: [['Inputs', [model.inputs]], ['Model', [model.name]], ['Outputs', [model.output]]]
+    };
     const groups = diagram.groups.map(([heading, nodes]) => {
       const content = nodes.map(node => `<span class="af-node">${escapeText(node)}</span>`).join('');
       return `<div class="af-group"><span class="af-label">${escapeText(heading)}</span><div class="af-nodes">${content}</div></div>`;
@@ -277,7 +282,7 @@
     const notes = (model.stages || []).map(([heading, explanation]) =>
       `<li><strong>${escapeText(heading)}</strong><span>${escapeText(explanation)}</span></li>`
     ).join('');
-    return `${flowStyle}<figure class="atlas-flow" aria-label="${escapeText(diagram.title + ' architecture flow')}"><div class="af-topology">${groups}</div>${notes ? '<ol class="af-notes">' + notes + '</ol>' : ''}</figure>`;
+    return `${flowStyle}<figure class="atlas-flow" aria-label="${escapeText(diagram.title + ' architecture flow')}"><div class="af-topology${hasDiagram ? '' : ' af-summary'}">${groups}</div>${notes ? '<ol class="af-notes">' + notes + '</ol>' : ''}</figure>`;
   }
 
   window.AtlasDrawings = Object.freeze({thumbnail, flow});
